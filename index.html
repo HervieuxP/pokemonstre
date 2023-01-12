@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <style>
+        *{
+            padding:0;
+            margin:0;
+        }
+        .lifebar {
+          height: 20px;
+          background-color: green;
+          display:row;
+          border-radius: 10px;
+          height:15px;
+        }
+        #monApp{
+            background: linear-gradient(to right,rgba(255, 0, 0, 0.3),rgba(255, 255, 0, 0.3));
+              
+        }
+        .parent-container {
+            display: flex;
+            justify-content: center;
+            
+          }
+          .child-container {
+            display: flex;
+            flex-direction: column;
+            margin:auto;
+          }
+          .border{
+            border:solid 2px black;
+            border-radius:15px;
+            width:250px;
+          }
+          header{
+            display:flex;
+            align-items: center;
+            justify-content: center;
+          }
+          h1{
+            opacity: 0.5;
+          }
+          .lisa{
+            margin-left:35vw;
+          }
+          #winner{
+            display:flex;
+            align-items: center;
+            justify-content: center;
+            margin:auto;
+            color:#E09847;
+            opacity:0.4;
+            font-size: 8rem;
+          }
+          #firstul{
+            opacity:0.9;
+            background-color: black;
+            color:white;
+            margin-left: 40vw;
+            
+          }
+
+          ul{
+            color:black;
+            border:black solid 2px;
+            border-radius: 15px;
+            width:15vw;
+            background: linear-gradient(to right,rgba(255, 0, 0, 0.3),rgba(255, 255, 0, 0.3));
+            color:aliceblue;
+          }
+          #turn{
+            display:flex;
+            align-self: center;
+            justify-content: center;
+            margin-left:15vw;
+          }
+         
+    </style>
+</head>
+<body id="monApp">
+    <header v-bind:style="{ alignItems: 'center', justifyContent: 'center' }" >
+        <div >
+            <h1>Pokémonstre</h1>
+        </div>
+    </header>
+    <div class="parent-container">
+        <div class="child-container mb-5">
+            <iframe src="https://giphy.com/embed/PHvJqejgxt7LyXej0k" width="200" height="200" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+            <div class="border">
+                <div class="lifebar" :style="{ width: viePlayer + '%' }"></div>
+            </div>
+        </div>
+        <p id="turn" v-if="turn!=0">Turn : {{turn}}</p>
+        <br>
+        <p id="winner" >{{winner}}</p>
+        <div class="child-container mb-5"> 
+            <iframe src="https://giphy.com/embed/s5CX4GI44nDeAC9cXy" width="200" height="200" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+            <div class="border">
+                <div class="lifebar" :style="{ width: vieEnnemy + '%' }"></div>
+            </div>
+        </div>
+    </div>
+   
+    <div class="container text-center">
+        <div class="row row-cols-2">
+            <button  type="button" class=" col btn btn-danger btn-lg"  @click="attack(),contreAttack()">Attack ⚔</button>
+            <button  type="button" class=" col btn btn-secondary btn-lg" @click="speAttack(),contreAttack()" v-if="turn%3 == 0 && turn != 0">Attack spé 🐱‍👤</button>
+            <button  type="button" class=" col btn btn-secondary btn-lg disabled" v-else>Attack spé 🐱‍👤</button>
+
+            <button  type="button" class=" col btn btn-info btn-lg" @click="soin(),contreAttack()">Soin 💉</button>
+            <button @click="openLink('https://www.youtube.com/watch?v=ZXsQAXx_ao0&ab_channel=MotivaShian')" type="button" class=" col btn btn-dark btn-lg"> Abbandonner 👎</button>
+        </div>
+      </div>
+    <br>
+    <div id="battlelog">
+      <ul id="firstul">
+        <li v-for="i in turn">
+          Tour {{i}}:
+          <ul>
+            <li v-if="i <= mesData.length">
+              Vous avez infligé {{mesData[i-1]}} de dégâts
+            </li>
+            <li v-if="i <= mesDataennemy.length">
+              Vous avez subi {{mesDataennemy[i-1]}} de dégâts
+            </li>
+            <li v-if="i <= soins.length">
+              Vous vous êtes soigné de {{soins[i-1]}}
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <iframe class="lisa" v-if="winner==='Draw'" src="https://giphy.com/embed/QvYii22WJtc8CKXErk" width="480" height="365" frameBorder="0" ></iframe>
+    <iframe class="lisa" v-if="winner==='Defeat'" src="https://giphy.com/embed/AH1YOXnwCZdJMPh6yJ" width="480" height="365" frameBorder="0" ></iframe>
+    <iframe class="lisa" v-if="winner==='Victory'" src="https://giphy.com/embed/3oz8xyeqK51CJBEuNW" width="480" height="270" frameBorder="0"></iframe>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/vue@next"></script>
+    <script src="app.js"></script>
+</body>
+</html>
+
+
